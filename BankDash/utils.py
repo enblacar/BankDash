@@ -35,42 +35,44 @@ def generate_color_map(labels, palette):
     return {category: palette[i % len(palette)] for i, category in enumerate(categories)}
 
 # Function to apply common theming across plots.
-def update_plot_layout(fig, type = None, font_size = None, font_color = "black"):
+def update_plot_layout(fig, type = None, fontsize = None, font_color = "black"):
     """
     Wrapper to update plotly plot themes automatically.
 
     :param fig: Plotly plot object.
     :param type: Type of plot: pie, heatmap.
-    :param font_size: Font size to apply generally.
+    :param fontsize: Font size to apply generally.
     :param font_color: Font color to apply generally.
     """
-    fig.update_layout(legend = dict(font = dict(size = font_size),
+    fig.update_layout(legend = dict(font = dict(size = fontsize),
                                     itemsizing = "constant"),
-                      legend_title = dict(font = dict(size = font_size)),
-                      font = dict(size = font_size, color = font_color),
+                      legend_title = dict(font = dict(size = fontsize)),
+                      font = dict(size = fontsize, color = font_color),
                       plot_bgcolor = "white", 
                       paper_bgcolor = "white",
                       xaxis = dict(showline = True,
                                   ticks = "",
-                                  tickfont = dict(size = font_size, color = font_color),
-                                  titlefont = dict(size = font_size, color = font_color)),
+                                  tickfont = dict(size = fontsize, color = font_color),
+                                  titlefont = dict(size = fontsize, color = font_color)),
                       yaxis = dict(showline = True,
                                   ticks = "",
-                                  tickfont = dict(size = font_size, color = font_color),
-                                  titlefont = dict(size = font_size, color = font_color)))
+                                  tickfont = dict(size = fontsize, color = font_color),
+                                  titlefont = dict(size = fontsize, color = font_color)))
     
     if type == "pie":
         fig.update_layout(margin = dict(l = 0, r = 0, t = 20, b = 20),
                           showlegend = False,
                           height = 700)
     elif type == "heatmap":
-        fig.update_layout(margin = dict(l = 0, r = 0, t = 0, b = 0),
-                          coloraxis_colorbar = dict(title = dict(font = dict(size = font_size, color = font_color)),
-                                                    tickfont = dict(size = font_size, color = font_color)))
+        fig.update_layout(margin = dict(l = 0, r = 0, t = 50, b = 0),
+                          coloraxis_colorbar = dict(title = dict(font = dict(size = fontsize, color = font_color)),
+                                                    tickfont = dict(size = fontsize, color = font_color)))
     elif type == "treemap":
-        fig.update_layout(uniformtext = dict(minsize = font_size, mode = "hide"),
+        fig.update_layout(uniformtext = dict(minsize = fontsize, mode = "hide"),
                           margin = dict(t = 50, l = 25, r = 25, b = 25),
-                          height = 800)
+                          height = 800,
+                          coloraxis_colorbar = dict(title = dict(font = dict(size = fontsize, color = font_color)),
+                                                    tickfont = dict(size = fontsize, color = font_color)))
 
         
     return fig

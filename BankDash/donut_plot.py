@@ -1,23 +1,33 @@
 from .utils import *
 
 # Function to generate the donut chart.
-def donut_plot(data, options, discrete_palette):
+def donut_plot(data,
+               month,
+               year,
+               subset,
+               focus, 
+               discrete_palette, 
+               fontsize):
     """
     Generate a donut plot based on given data.
 
     :param data: Data to plot.
-    :param options: Dictionary with the user-provided streamlit options.
+    :param year: Year to filter.
+    :param month: Month to filter.
+    :param focus: Which level of data to show.
+    :param subset: Which underlevel of the current level to show.
     :discrete_palette: Discrete color palette to use. 
+    :param fontsize: Font size to use in the plot.
     """
 
     # Filter data based on month
-    data_plot = data if options["Month"] == "All months" else data[data["Month"] == options["Month"]]
+    data_plot = data if month == "All months" else data[data["Month"] == month]
 
-    if options["Subset"] == "None":
-        group_by_column = options["Focus"]
+    if subset == "None":
+        group_by_column = focus
     else:
-        group_by_column = {"Sector": "Category", "Category": "Group", "Group": "Payee"}[options["Focus"]]
-        data_plot = data_plot[data_plot[options["Focus"]] == options["Subset"]]
+        group_by_column = {"Sector": "Category", "Category": "Group", "Group": "Payee"}[focus]
+        data_plot = data_plot[data_plot[focus] == subset]
     
     data_plot = data_plot.groupby(group_by_column)["Amount"].sum().reset_index().sort_values("Amount", ascending = True)
 
@@ -35,13 +45,13 @@ def donut_plot(data, options, discrete_palette):
                hole = 0.75,
                textinfo = "label",
                hoverinfo = "percent + value",
-               title = f'Expenses by <b>{options["Focus"]}</b><br><b>{options["Year"]}</b> | <b>{options["Month"]}</b> | <b>{options["Subset"]}</b>',
+               title = f'Expenses by <b>{focus}</b><br><b>{year}</b> | <b>{month}</b> | <b>{subset}</b>',
                marker = dict(colors = colors,
                              line = dict(color = "white", 
                                          width = 1.5)))  
     
     p = go.Figure(p)
 
-    p = update_plot_layout(fig = p, type = "pie", font_size = options["Fontsize"])
+    p = update_plot_layout(fig = p, type = "pie", fontsize = fontsize)
 
     return p

@@ -1,13 +1,13 @@
 from .utils import *
 
-def plot_future_values(data, options, discrete_palette, log_y):
+def plot_future_values(data, discrete_palette, log_y, fontsize):
     """
     Plot the future values as a stacked bar plot using Plotly.
 
     :param data: DataFrame containing the future value data.
-    :param options: Dictionary with the user-provided streamlit options.
     :param discrete_palette: Discrete color palette to use. 
-    :param log_y: Whether to log10 scale the Y axis.
+    :param log_y: Whether to log10 scale the Y axis. 
+    :param fontsize: Font size to use in the plot.
     """
 
     # Turn wide data to long data.
@@ -55,11 +55,11 @@ def plot_future_values(data, options, discrete_palette, log_y):
                     legend_title = "",
                     bargap = 0.2,
                     hovermode = "x unified",
-                    hoverlabel=dict(bgcolor="white", font_size=options["Fontsize"]),
+                    hoverlabel=dict(bgcolor="white", font_size = fontsize),
                     legend = dict(x = 0.5, y = 1.1, xanchor = "center", yanchor = "top", orientation = "h"),
                           height = 700)
 
-    p = update_plot_layout(fig = p, type = "bar", font_size = options["Fontsize"])
+    p = update_plot_layout(fig = p, type = "bar", fontsize = fontsize)
     
 
     return(p)
