@@ -3,9 +3,9 @@ import streamlit as st
 import plotly.express as px
 
 def main():
-    discrete_palette_2 = st.session_state.discrete_palette_2
+    discrete_palette = st.session_state.discrete_palette
     fontsize = st.session_state.fontsize
-    with st.container():
+    with st.expander("**Calculator inputs**", expanded = True):
         col1, col2, col3, col4 = st.columns(4, vertical_alignment = "center")
         with col1: 
             principal = st.number_input("Initial investment (€)", min_value = 0, value = None, step = 50, placeholder = "1500", help = "Amount in Euros")
@@ -33,7 +33,7 @@ def main():
                                     ter = ter, 
                                     inflation = inflation)
         
-        p = plot_future_values(data = amount, discrete_palette = discrete_palette_2, log_y = log_y, fontsize = fontsize)
+        p = plot_future_values(data = amount, discrete_palette = discrete_palette, log_y = log_y, fontsize = fontsize)
         
         st.plotly_chart(p, use_container_width=True)
     else:

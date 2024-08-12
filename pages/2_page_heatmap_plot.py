@@ -9,7 +9,7 @@ def main():
     continuous_palette = st.session_state.continuous_palette
     divergent_palette = st.session_state.divergent_palette
     
-    with st.container():
+    with st.expander("**Plot options**", expanded = True):
         col1, col2, col3 = st.columns(3, vertical_alignment = "top")
         year_options = data['Year'].unique().astype(int)
         with col1: option_year = st.selectbox('Filter by Year:', year_options, key = "year1", index = len(year_options) - 1)

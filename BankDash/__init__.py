@@ -1,5 +1,5 @@
 # Imports.
-from .utils import load_data, generate_color_map, update_plot_layout
+from .utils import load_data, generate_color_map, update_plot_layout, get_plotly_colors, display_palette_as_gradient
 from .donut_plot import donut_plot
 from .heatmap_plot import heatmap_plot
 from .scatter_plot import scatter_plot
@@ -15,4 +15,6 @@ __all__ = ["load_data",
            "scatter_plot",
            "calculate_future_value",
            "plot_future_values",
-           "treemap_plot"]
+           "treemap_plot",
+           "get_plotly_colors",
+           "display_palette_as_gradient"]

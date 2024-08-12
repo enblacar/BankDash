@@ -11,7 +11,7 @@ def main():
     
     col1, col2 = st.columns([2, 8])
 
-    with st.container():
+    with st.expander("**Plot options**", expanded = True):
         col1, col2, col3, col4 = st.columns(4, vertical_alignment = "top")
 
 

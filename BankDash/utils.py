@@ -8,6 +8,7 @@ import datetime as dt
 from scipy.stats import zscore
 import colorsys
 import matplotlib.colors as mcolors
+import plotly.colors as pc
 
 @st.cache_data
 def load_data(filepath):
@@ -77,42 +78,36 @@ def update_plot_layout(fig, type = None, fontsize = None, font_color = "black"):
         
     return fig
 
-def hex_to_rgb(hex_color):
-    """
-    Convert a hex color to an RGB tuple.
-    :param hex_color: Hex color string (e.g., "#FF0000").
-    :return: Tuple of RGB values in the range [0, 1].
-    """
-    return mcolors.hex2color(hex_color)
+def get_plotly_colors():
+    # Create a dictionary of the colors for each color palette in plotly.
+    qualitative_colors = {palette_name: getattr(px.colors.qualitative, palette_name)
+                         for palette_name in dir(px.colors.qualitative)
+                         if not palette_name.startswith("_") and isinstance(getattr(px.colors.qualitative, palette_name), list)}
 
-def desaturate_color(color, factor = 0.5):
-    """
-    Desaturates a single color by the given factor.
-    :param color: Tuple of RGB values (r, g, b), each in the range [0, 1].
-    :param factor: Desaturation factor (0 = completely desaturated, 1 = original saturation).
-    :return: Tuple of desaturated RGB values.
-    """
-    r, g, b = color
-    h, l, s = colorsys.rgb_to_hls(r, g, b)
-    s *= factor
+    sequential_colors = {palette_name: getattr(px.colors.sequential, palette_name)
+                        for palette_name in dir(px.colors.sequential)
+                        if not palette_name.startswith("_") and isinstance(getattr(px.colors.sequential, palette_name), list)}
+    
+    diverging_colors = {palette_name: getattr(px.colors.diverging, palette_name)
+                        for palette_name in dir(px.colors.diverging)
+                        if not palette_name.startswith("_") and isinstance(getattr(px.colors.diverging, palette_name), list)}
+    
+    return qualitative_colors, sequential_colors, diverging_colors
 
-    return colorsys.hls_to_rgb(h, l, s)
+def display_palette_as_gradient(palette, continuous = True, num_colors = 100):
+    # Create a continuous color scale based on the selected qualitative palette
+    color_scale = pc.make_colorscale(palette)
+    if continuous:
+        colors_use = pc.sample_colorscale(color_scale, [i/(num_colors-1) for i in range(num_colors)], colortype='rgb')
+    else:
+        colors_use = palette
 
-def desaturate_colors(colors, factor = 0.5):
-    """
-    Desaturates a list of colors.
-    :param colors: List of hex color strings or RGB tuples.
-    :param factor: Desaturation factor (0 = completely desaturated, 1 = original saturation).
-    :return: List of desaturated RGB values.
-    """
-    rgb_colors = [hex_to_rgb(color) if isinstance(color, str) else color for color in colors]
-    return [desaturate_color(color, factor) for color in rgb_colors]
+    # Prepare an HTML string to render the color scale as a single line of div elements
+    color_boxes = ''.join(
+        f'<div style="background-color:{color}; height:50px; width:100%; flex:1; margin:0; padding:0;"></div>'
+        for color in colors_use
+    )
 
-def create_colorscale_from_colors(colors):
-    """
-    Converts a list of RGB tuples to a Plotly-compatible colorscale.
-    :param colors: List of RGB tuples.
-    :return: List of [value, color] pairs for colorscale.
-    """
-    n = len(colors)
-    return [[i / (n - 1), mcolors.rgb2hex(color)] for i, color in enumerate(colors)]
+    # Display the color scale as a single horizontal line
+    st.write(f'<div style="display:flex; width:100%;">{color_boxes}</div>', unsafe_allow_html=True)
+    
